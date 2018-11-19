@@ -49,9 +49,9 @@ class Lang
             return null;
 
         $this->LOAD($data[0]);
-        if (!isset($this->content['keys'][$key]))
+        if (!isset($this->content['keys'][$data[1]]))
             return null;
 
-        return str_replace(array_keys($replace), array_values($replace), $this->content['keys'][$key]);
+        return str_replace(array_keys($replace), array_values($replace), $this->content['keys'][$data[1]]);
     }
 }
