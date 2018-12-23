@@ -3,20 +3,35 @@
 namespace Karamel\Localization;
 class Lang
 {
-    private $content;
     public static $instance;
-    public static function getInstance()
-    {
-        if (self::$instance == null)
-            self::$instance = new Lang();
-        return self::$instance;
-    }
+    private $content;
+
     public function __construct()
     {
         $this->content = [
             'files' => [],
             'keys' => []
         ];
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance == null)
+            self::$instance = new Lang();
+        return self::$instance;
+    }
+
+    public function get($key, $replace = [])
+    {
+        $data = explode(".", $key);
+        if (count($data) < 2)
+            return null;
+
+        $this->LOAD($data[0]);
+        if (!isset($this->content['keys'][$data[1]]))
+            return null;
+
+        return str_replace(array_keys($replace), array_values($replace), $this->content['keys'][$data[1]]);
     }
 
     public function LOAD($file)
@@ -40,18 +55,5 @@ class Lang
 
         $this->content['files'][] = $file;
         return null;
-    }
-
-    public function get($key, $replace = [])
-    {
-        $data = explode(".", $key);
-        if (count($data) < 2)
-            return null;
-
-        $this->LOAD($data[0]);
-        if (!isset($this->content['keys'][$data[1]]))
-            return null;
-
-        return str_replace(array_keys($replace), array_values($replace), $this->content['keys'][$data[1]]);
     }
 }
